@@ -1,0 +1,54 @@
+// fitCamera between two coordinate points
+/*
+  neBound = NorthEast
+  swBound = SouthWest
+*/
+this._mapCamera.fitBounds(neBound, swBound, [50, 50, 150, 50], 3000)  // [top, right, bottom, left], timing
+
+
+// for the route line use LineLayer
+<MapboxGL.ShapeSource id="routeSource2" shape={singleTripRoute.geometry} belowLayerID="shapesourcebox">
+     <MapboxGL.LineLayer 
+       id="routeLineLayer2" 
+       belowLayerID="shapesourcesymbol" 
+       style={{ lineColor: "#060E58", lineWidth: 8, lineCap: 'round', lineOpacity: 1, lineJoin: 'round' }} 
+     />
+</MapboxGL.ShapeSource>
+
+
+// get distance between two lat lng in km
+getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+    var dLon = this.deg2rad(lon2 - lon1);
+    var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+}
+deg2rad(deg) {
+        return deg * (Math.PI / 180)
+}
+
+
+// data structure for mapbox shapesource
+const data = {
+            type: 'FeatureCollection',
+            features: [{
+                type: 'Feature',
+                properties: {
+                    addressName: item.address,
+                    coordinates: [parseFloat(item.lng), parseFloat(item.lat)],
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [parseFloat(item.lng), parseFloat(item.lat)],
+                },
+            }]
+        }
+
+
